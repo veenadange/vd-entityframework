@@ -1,12 +1,14 @@
 # EF support RLS migration scripts
-This repo implements support for adding/modifiying RLS (Row level security) entities during EF migrations
+This repo implements an approach for adding/modifiying RLS (Row level security) related entities during EF migrations, by extending Sql service migration generator.
 
-1. Implemented 'ExtendedSqlServerMigrationsSqlGenerator' extended from EF's 'SqlServerMigrationsSqlGenerator'
-2. 'Generate' method for 'CreateTableOperation'/'DropTableOperation' is overriden
-3. Created first empty migration. Added sql scripts for creating pre-requisite rls related entities (predicate function + empty security policy).
-4. Created custom attribute 'EnableRlsAttribute' and applied to required tables from dbcontext, which is read at the time of script generation to decide whether to add table filter/block predicate for table (or whether to drop predicates in case of drop table)
+1. Implements custom SqlServer migrations generator - 'ExtendedSqlServerMigrationsSqlGenerator' extended from EF's 'SqlServerMigrationsSqlGenerator'.
+2. 'Generate' method for 'CreateTableOperation'/'DropTableOperation' is overriden.
+3. Replace migration generator service IMigrationsSqlGenerator with custom one in program.cs/startup.cs.
+4. First empty migration needs to be added (without any code inside dbcontext), so that it will generate empty Up/Down methods. Added sql scripts in that for creating pre-requisite rls related entities (predicate function + empty security policy).
+5. Created custom attribute 'EnableRlsAttribute'. Apply it to the required tables (dbsets) from dbcontext. This attribute is read inside overriden methods of 'ExtendedSqlServerMigrationsSqlGenerator'. It decides whether to add/drop filter/block predicate for a table, at the time of ef script generation/update-database operation.
+6. This will automatically add/drop predicates for a table to security policy while creating/dropping it, provided that given custom attribute is set for a given table.
 
-#Helper commands for script generation during deployment
+# Sample helper commands for script generation
 
 dotnet ef migrations script 20230222083702_CreateRlsEntities 20230222084145_Initial -i -o DeploymentScripts/Initial.sql
 
