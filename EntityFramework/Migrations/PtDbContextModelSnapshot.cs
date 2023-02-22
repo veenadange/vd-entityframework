@@ -18,10 +18,10 @@ namespace EntityFrameworkRls.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Pt")
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "6.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("EntityFrameworkRls.Models.Client", b =>
                 {

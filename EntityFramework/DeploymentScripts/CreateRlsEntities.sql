@@ -11,13 +11,13 @@ GO
 BEGIN TRANSACTION;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222083702_CreateRlsEntities')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222091602_CreateRlsEntities')
 BEGIN
     IF SCHEMA_ID(N'Rls') IS NULL EXEC(N'CREATE SCHEMA [Rls];');
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222083702_CreateRlsEntities')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222091602_CreateRlsEntities')
 BEGIN
     IF OBJECT_ID(N'[Rls].[fn_tenantAccessPredicate]') IS NULL
     BEGIN
@@ -32,7 +32,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222083702_CreateRlsEntities')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222091602_CreateRlsEntities')
 BEGIN
     IF OBJECT_ID(N'[Rls].[tenantAccessPolicy]') IS NULL
     BEGIN
@@ -43,10 +43,10 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222083702_CreateRlsEntities')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222091602_CreateRlsEntities')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20230222083702_CreateRlsEntities', N'7.0.3');
+    VALUES (N'20230222091602_CreateRlsEntities', N'6.0.14');
 END;
 GO
 

@@ -10,7 +10,7 @@ namespace EntityFrameworkRls.Helpers
     //Custom SqlServer migrations generator with overriden required operations (create/drop table)
     internal class ExtendedSqlServerMigrationsSqlGenerator : SqlServerMigrationsSqlGenerator
     {
-        public ExtendedSqlServerMigrationsSqlGenerator(MigrationsSqlGeneratorDependencies dependencies, ICommandBatchPreparer migrationsAnnotations)
+        public ExtendedSqlServerMigrationsSqlGenerator(MigrationsSqlGeneratorDependencies dependencies, IRelationalAnnotationProvider migrationsAnnotations)
             : base(dependencies, migrationsAnnotations) {
         }
 

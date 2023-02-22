@@ -1,13 +1,13 @@
 ﻿BEGIN TRANSACTION;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222084145_Initial')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222091719_Initial')
 BEGIN
     IF SCHEMA_ID(N'Pt') IS NULL EXEC(N'CREATE SCHEMA [Pt];');
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222084145_Initial')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222091719_Initial')
 BEGIN
     CREATE TABLE [Pt].[Clients] (
         [Id] uniqueidentifier NOT NULL,
@@ -19,7 +19,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222084145_Initial')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222091719_Initial')
 BEGIN
     EXEC('ALTER SECURITY POLICY [Rls].[tenantAccessPolicy]
     ADD FILTER PREDICATE [Rls].[fn_tenantAccessPredicate](TenantId) ON [Pt].[Clients],
@@ -28,7 +28,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222084145_Initial')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222091719_Initial')
 BEGIN
     CREATE TABLE [Pt].[TaxReturns] (
         [Id] uniqueidentifier NOT NULL,
@@ -39,10 +39,10 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222084145_Initial')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230222091719_Initial')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20230222084145_Initial', N'7.0.3');
+    VALUES (N'20230222091719_Initial', N'6.0.14');
 END;
 GO
 
