@@ -1,5 +1,5 @@
 # EF support RLS migration scripts
-This repo implements an approach for adding/modifiying RLS (Row level security) related entities during EF migrations, by extending Sql service migration generator.
+This repo implements an approach for adding/updating RLS (Row level security) related entities during EF migrations, by extending Sql server migration generator.
 
 1. Implements custom SqlServer migrations generator - 'ExtendedSqlServerMigrationsSqlGenerator' extended from EF's 'SqlServerMigrationsSqlGenerator'.
 2. 'Generate' method for 'CreateTableOperation'/'DropTableOperation' is overriden.
