@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityFrameworkRls.Models
 {
+    //[RlsPolicy]
     public class Client
     {
         public Guid TenantId { get; set; }

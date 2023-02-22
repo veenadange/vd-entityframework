@@ -18,7 +18,7 @@ namespace EntityFrameworkRls.Controllers
         /// <param name="tenantId">Set session for rls</param>
         /// <returns></returns>
         [HttpGet("/clients")]
-        public IEnumerable<Client> GetClients([FromQuery]Guid tenantId) 
+        public IEnumerable<Client> GetClients([FromQuery]Guid tenantId)
         {
             return _dbContext.Clients;
         }

@@ -1,23 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System.Text;
 
 namespace EntityFrameworkRls.Helpers
 {
     public static class MigrationHelper
     {
-        //adds custom rls annotation for table
-        public static TableBuilder EnableRLS(this TableBuilder tableBuilder)
+        //builds idempotent script for creation of predicate function and security policy for rls
+        public static StringBuilder BuildCreateSecurityPolicyScript()
         {
-            var policy = new RlsPolicy();
-            tableBuilder.Metadata.SetAnnotation(policy.Name, policy.Value);
-            return tableBuilder;
-        }
-
-        //builds idempotent scripts for creation of predicate function and security policy for rls
-        public static void AddSecurityPolicy(this MigrationCommandListBuilder builder)
-        {
+            StringBuilder builder = new();
+            builder.AppendLine("GO");
             builder.AppendLine($"IF SCHEMA_ID(N'Rls') IS NULL EXEC(N'CREATE SCHEMA [Rls];');");
-            builder.EndCommand();
+            builder.AppendLine("GO");
 
             builder.AppendLine($"IF OBJECT_ID(N'[Rls].[fn_tenantAccessPredicate]') IS NULL");
             builder.AppendLine($"BEGIN{Environment.NewLine}");
@@ -30,14 +23,46 @@ namespace EntityFrameworkRls.Helpers
                 "WHERE CAST(SESSION_CONTEXT(N''TenantId'') AS uniqueidentifier) = @TenantId;')" + Environment.NewLine
             );
             builder.AppendLine($"END");
-            builder.EndCommand();
+            builder.AppendLine("GO");
 
             builder.AppendLine($"IF OBJECT_ID(N'[Rls].[tenantAccessPolicy]') IS NULL");
             builder.AppendLine($"BEGIN{Environment.NewLine}");
             builder.AppendLine(
             $"CREATE SECURITY POLICY [Rls].[tenantAccessPolicy]" + Environment.NewLine);
             builder.AppendLine($"END");
-            builder.EndCommand();
+            builder.AppendLine("GO");
+            return builder;
+        }
+
+        //builds idempotent script for dropping predicate function and security policy for rls
+        public static StringBuilder BuildDropSecurityPolicyScript()
+        {
+            StringBuilder builder = new();
+            builder.AppendLine("GO");
+            builder.AppendLine($"IF SCHEMA_ID(N'Rls') IS NOT NULL EXEC(N'DROP SCHEMA [Rls];');");
+            builder.AppendLine("GO");
+
+            builder.AppendLine($"IF OBJECT_ID(N'[Rls].[fn_tenantAccessPredicate]') IS NOT NULL");
+            builder.AppendLine($"BEGIN{Environment.NewLine}");
+            builder.AppendLine(
+            $"EXEC('DROP FUNCTION [Rls].[fn_tenantAccessPredicate]')" + Environment.NewLine
+            );
+            builder.AppendLine($"END");
+            builder.AppendLine("GO");
+
+            builder.AppendLine($"IF OBJECT_ID(N'[Rls].[tenantAccessPolicy]') IS NOT NULL");
+            builder.AppendLine($"BEGIN{Environment.NewLine}");
+            builder.AppendLine(
+            $"DROP SECURITY POLICY [Rls].[tenantAccessPolicy]" + Environment.NewLine);
+            builder.AppendLine($"END");
+            builder.AppendLine("GO");
+            return builder;
+        }
+
+        //gets table names having custom attribute - [EnableRls] from dbcontext properties
+        public static IEnumerable<string>? GetTableNamesForRls() {
+            
+            return typeof(PtDbContext).GetProperties().Where(x => Attribute.GetCustomAttribute(x, typeof(EnableRlsAttribute)) != null)?.Select(x => x.Name);
         }
     }
 }

@@ -1,6 +1,7 @@
 using EntityFrameworkRls;
 using EntityFrameworkRls.Helpers;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<PtDbContext>(options =>
 {
-    options.ReplaceService<IMigrationsSqlGenerator, CustomSqlServerMigrationsSqlGenerator>();
+    //options.ReplaceService<IMigrationsAnnotationProvider, ExtendedSqlServerMigrationsAnnotationProvider>();
+    options.ReplaceService<IMigrationsSqlGenerator, ExtendedSqlServerMigrationsSqlGenerator>();
 });
 var app = builder.Build();
 

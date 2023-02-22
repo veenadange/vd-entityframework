@@ -12,18 +12,19 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EntityFrameworkRls.Migrations
 {
     [DbContext(typeof(PtDbContext))]
-    [Migration("20230221062243_initial")]
-    partial class initial
+    [Migration("20230222084145_Initial")]
+    partial class Initial
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Pt")
-                .HasAnnotation("ProductVersion", "6.0.14")
+                .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("EntityFrameworkRls.Models.Client", b =>
                 {
@@ -44,8 +45,6 @@ namespace EntityFrameworkRls.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clients", "Pt");
-
-                    b.HasAnnotation("EnableRls", true);
                 });
 
             modelBuilder.Entity("EntityFrameworkRls.Models.TaxReturn", b =>

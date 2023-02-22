@@ -1,15 +1,13 @@
-﻿using EntityFrameworkRls.Helpers;
-using EntityFrameworkRls.Models;
+﻿using EntityFrameworkRls.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Data;
 
 namespace EntityFrameworkRls
 {
     public class PtDbContext : DbContext
     {
-        IHttpContextAccessor _httpContextAccessor;
+        readonly IHttpContextAccessor _httpContextAccessor;
         public PtDbContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor) : base(options)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -17,7 +15,7 @@ namespace EntityFrameworkRls
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var sqlConnection = new SqlConnection(@"Server=.;Database=Test;Integrated Security=SSPI;");
+            var sqlConnection = new SqlConnection(@"Server=.;Database=Test;Integrated Security=SSPI;TrustServerCertificate=true;");
             // Set TenantId in SESSION_CONTEXT to TenantId
             // to enable Row-Level Security filtering.
             sqlConnection.StateChange += (sender, e) =>
@@ -36,14 +34,13 @@ namespace EntityFrameworkRls
             base.OnConfiguring(optionsBuilder);
         }
 
+        [EnableRls]
         public DbSet<Client> Clients { get; set; }
+
         public DbSet<TaxReturn> TaxReturns { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("Pt");
-
-            modelBuilder.Entity<Client>().ToTable(x => x.EnableRLS());
-            //modelBuilder.Entity<TaxReturn>().ToTable(x => x.EnableRLS());
         }
 
         private Guid GetTenantId()
@@ -52,9 +49,14 @@ namespace EntityFrameworkRls
         }
     }
 
-    public class RlsPolicy : IAnnotation
+    //public class RlsPolicy : IAnnotation
+    //{
+    //    public string Name => "EnableRls";
+    //    public object? Value => true;
+    //}
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class EnableRlsAttribute : Attribute
     {
-        public string Name => "EnableRls";
-        public object? Value => true;
     }
 }
