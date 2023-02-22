@@ -39,7 +39,12 @@ namespace EntityFrameworkRls.Helpers
         {
             StringBuilder builder = new();
             builder.AppendLine("GO");
-            builder.AppendLine($"IF SCHEMA_ID(N'Rls') IS NOT NULL EXEC(N'DROP SCHEMA [Rls];');");
+
+            builder.AppendLine($"IF OBJECT_ID(N'[Rls].[tenantAccessPolicy]') IS NOT NULL");
+            builder.AppendLine($"BEGIN{Environment.NewLine}");
+            builder.AppendLine(
+            $"DROP SECURITY POLICY [Rls].[tenantAccessPolicy]" + Environment.NewLine);
+            builder.AppendLine($"END");
             builder.AppendLine("GO");
 
             builder.AppendLine($"IF OBJECT_ID(N'[Rls].[fn_tenantAccessPredicate]') IS NOT NULL");
@@ -50,11 +55,7 @@ namespace EntityFrameworkRls.Helpers
             builder.AppendLine($"END");
             builder.AppendLine("GO");
 
-            builder.AppendLine($"IF OBJECT_ID(N'[Rls].[tenantAccessPolicy]') IS NOT NULL");
-            builder.AppendLine($"BEGIN{Environment.NewLine}");
-            builder.AppendLine(
-            $"DROP SECURITY POLICY [Rls].[tenantAccessPolicy]" + Environment.NewLine);
-            builder.AppendLine($"END");
+            builder.AppendLine($"IF SCHEMA_ID(N'Rls') IS NOT NULL EXEC(N'DROP SCHEMA [Rls];');");
             builder.AppendLine("GO");
             return builder;
         }
